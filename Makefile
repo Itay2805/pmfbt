@@ -26,7 +26,7 @@ DEBUG ?= 0
 
 CFLAGS := -Wall -Werror
 CFLAGS += -O3 -flto -g
-CFLAGS += -Isrc
+CFLAGS += -Isrc -Ideps/openvr/headers
 
 LDFLAGS := -shared
 

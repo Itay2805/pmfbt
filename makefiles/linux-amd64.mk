@@ -6,5 +6,8 @@ LD := $(CC)
 LDFLAGS += -target x86_64-pc-linux
 LDFLAGS += -fuse-ld=lld
 
+# OpenVR client library
+LDFLAGS += deps/openvr/lib/linux64/openvr_api.so
+
 # The binary extension
 EXTENSION := so
