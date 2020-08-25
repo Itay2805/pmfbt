@@ -34,7 +34,7 @@ LDFLAGS := -shared
 SRCS += $(shell find src -iname '*.cpp')
 
 ifeq ($(DEBUG), 1)
-	BIN_DIR := bin/DEBUG
+	OUT_DIR := out/$(PLATFORM)/$(ARCH)/DEBUG/
 	BUILD_DIR := build/$(PLATFORM)/$(ARCH)/DEBUG
 
 	CFLAGS += -D_DEBUG
@@ -42,7 +42,7 @@ ifeq ($(DEBUG), 1)
 #	CFLAGS += -fsanitize=address
 #	CFLAGS += -fsanitize=undefined
 else
-	BIN_DIR := bin/RELEASE
+	OUT_DIR := out/$(PLATFORM)/$(ARCH)/RELEASE/
 	BUILD_DIR := build/$(PLATFORM)/$(ARCH)/RELEASE
 
 	CFLAGS += -DNDEBUG
@@ -50,35 +50,42 @@ endif
 
 include makefiles/$(PLATFORM)-$(ARCH).mk
 
+OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
+DEPS := $(OBJS:%.o=%.d)
+
+MISC_FILES := $(shell find driver -type f)
+
 ########################################################################################################################
 # Phony
 ########################################################################################################################
 
 .PHONY: all clean clean-all
 
-all: $(BIN_DIR)/$(PLATFORM)_$(ARCH)_pmfbt_driver.$(EXTENSION)
+all: $(DRIVER_BINARY)
+	cp $(MISC_FILES) $(OUT_DIR)
 
 ########################################################################################################################
 # Targets
 ########################################################################################################################
 
-OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
-DEPS := $(OBJS:%.o=%.d)
-
 -include $(DEPS)
 
-$(BIN_DIR)/$(PLATFORM)_$(ARCH)_pmfbt_driver.$(EXTENSION): $(BINS) $(OBJS)
+# Link it
+$(DRIVER_BINARY): $(BINS) $(OBJS)
 	@echo LD $@
 	@mkdir -p $(@D)
 	@$(LD) $(LDFLAGS) -o $@ $(OBJS)
 
+# Build C++ files
 $(BUILD_DIR)/%.cpp.o: %.cpp
 	@echo CC $@
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -MMD -D__FILENAME__="$<" -c $< -o $@
 
+# Clean the build files
 clean:
 	rm -rf build
 
+# Clean everything, including the output directory
 clean-all: clean
-	rm -rf bin
+	rm -rf out

@@ -10,4 +10,4 @@ LDFLAGS += -fuse-ld=lld
 LDFLAGS += deps/openvr/lib/linux64/openvr_api.so
 
 # The binary extension
-EXTENSION := so
+DRIVER_BINARY := $(OUT_DIR)/bin/win64/pmfbt.so
