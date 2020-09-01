@@ -89,7 +89,7 @@ vr::DriverPose_t PmfbtTracker::GetPose() {
 }
 
 /**
- * We don't ave standby mode on a per-device
+ * We don't have standby mode on a per-device
  * level
  */
 void PmfbtTracker::EnterStandby() {
