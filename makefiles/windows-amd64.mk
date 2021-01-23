@@ -8,4 +8,4 @@ CFLAGS += -DLINUX -DPOSIX -DLINUX64
 LDFLAGS += deps/openvr/lib/win64/openvr_api.lib
 
 # The binary extension
-DRIVER_BINARY := $(OUT_DIR)/bin/win64/pmfbt.dll
+DRIVER_BINARY := $(BIN_DIR)/win64/pmfbt.dll

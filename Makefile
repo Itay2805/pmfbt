@@ -6,48 +6,32 @@
 # Possible archs:
 # 	- amd64
 #
-ARCH ?= amd64
+ARCH 		?= amd64
 
 #
 # Possible platforms:
 # 	- linux
 # 	- windows
 #
-PLATFORM ?= windows
-
-#
-# Enable debug stuff
-#
-DEBUG ?= 0
+PLATFORM 	?= windows
 
 ########################################################################################################################
 # Build constants
 ########################################################################################################################
 
-CFLAGS := -Wall -std=c++17 -fpermissive
-CFLAGS += -Wno-unused-variable -fpermissive
-CFLAGS += -O3 -flto -g
-CFLAGS += -Isrc -Ideps/openvr/headers
+CFLAGS 		:= -Wall -std=c++17 -fpermissive
+CFLAGS 		+= -Wno-unused-variable -fpermissive
+CFLAGS 		+= -O3 -flto -g
+CFLAGS 		+= -Isrc -Ideps/openvr/headers
 
-LDFLAGS := -shared
+LDFLAGS 	:= -shared
 
 # Game sources
 SRCS += $(shell find src -iname '*.cpp')
 
-ifeq ($(DEBUG), 1)
-	OUT_DIR := out/$(PLATFORM)/$(ARCH)/DEBUG/
-	BUILD_DIR := build/$(PLATFORM)/$(ARCH)/DEBUG
-
-	CFLAGS += -D_DEBUG
-	CFLAGS += -D__DEBUG__
-#	CFLAGS += -fsanitize=address
-#	CFLAGS += -fsanitize=undefined
-else
-	OUT_DIR := out/$(PLATFORM)/$(ARCH)/RELEASE/
-	BUILD_DIR := build/$(PLATFORM)/$(ARCH)/RELEASE
-
-	CFLAGS += -DNDEBUG
-endif
+OUT_DIR 	:= out/$(PLATFORM)/$(ARCH)
+BIN_DIR 	:= $(OUT_DIR)/bin/$(PLATFORM)/$(ARCH)
+BUILD_DIR 	:= $(OUT_DIR)/build/$(PLATFORM)/$(ARCH)
 
 include makefiles/$(PLATFORM)-$(ARCH).mk
 
@@ -63,7 +47,7 @@ MISC_FILES := $(shell find driver -type f)
 .PHONY: all clean clean-all
 
 all: $(DRIVER_BINARY)
-	cp $(MISC_FILES) $(OUT_DIR)
+	cp $(MISC_FILES) $(BIN_DIR)
 
 ########################################################################################################################
 # Targets
