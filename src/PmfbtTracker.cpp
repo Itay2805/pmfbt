@@ -19,7 +19,6 @@ void PmfbtTracker::UpdatePoint(const vector3& new_point) {
     newPose.poseIsValid = true;
     newPose.result = vr::TrackingResult_Running_OK;
 
-    // TODO: everything to setup the new position
 
     // actually set the pose
     {

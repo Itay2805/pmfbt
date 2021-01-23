@@ -6,9 +6,9 @@
 #include "PmfbtTracker.hpp"
 
 static const char* trackerSerialNumbers[3] = {
-    "PMFBT Left Leg",
-    "PMFBT Right Leg",
-    "PMFBT Hip"
+    "PMFBT Left Leg",   // Left Foot
+    "PMFBT Right Leg",  // Right Foot
+    "PMFBT Hip"         // Hip
 };
 
 class PmfbtDriver final : public vr::IServerTrackedDeviceProvider {

@@ -9,8 +9,22 @@
 
 class PmfbtTracker : public vr::ITrackedDeviceServerDriver {
 private:
+    /**
+     * The OpenVR object ID
+     */
     uint32_t objectId;
+
+    /**
+     * The last pose that we got, this is returned
+     * from the GetPose function
+     */
     vr::DriverPose_t lastPose;
+
+    /**
+     * Mutex to protect the lastPose (this is needed
+     * when we make the lastPose be updated from a
+     * different thread)
+     */
     std::mutex mutex;
 
 public:
