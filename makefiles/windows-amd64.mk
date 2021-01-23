@@ -1,10 +1,7 @@
 # Setup the compiler, linker and target
-CC := clang++-10
-CFLAGS += -target x86_64-pc-windows-gnu
+CC := x86_64-w64-mingw32-g++
 
 LD := $(CC)
-LDFLAGS += -target x86_64-pc-windows-gnu
-LDFLAGS += -fuse-ld=lld
 
 # OpenVR client library
 CFLAGS += -DLINUX -DPOSIX -DLINUX64

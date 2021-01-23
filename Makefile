@@ -24,7 +24,8 @@ DEBUG ?= 0
 # Build constants
 ########################################################################################################################
 
-CFLAGS := -Wall -Werror -std=c++20
+CFLAGS := -Wall -std=c++17 -fpermissive
+CFLAGS += -Wno-unused-variable -fpermissive
 CFLAGS += -O3 -flto -g
 CFLAGS += -Isrc -Ideps/openvr/headers
 
