@@ -51,3 +51,7 @@ struct vector2 {
     float distance(const vector2& other) const;
     float dot(const vector2& other) const;
 };
+
+static inline vector2 middle(vector2 a, vector2 b) {
+    return vector2((a.x + b.x) / 2, (a.y + b.y) / 2);
+}

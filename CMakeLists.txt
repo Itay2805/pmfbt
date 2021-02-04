@@ -84,7 +84,13 @@ endif()
 ########################################################################################################################
 
 #
-# OpenVR API path
+# OpenCV
+#
+set(OpenCV_STATIC ON)
+find_package(OpenCV REQUIRED PATHS "deps/openvr")
+
+#
+# OpenVR
 #
 find_library(OPENVR_LIBRARIES
     NAMES
@@ -117,6 +123,7 @@ file(GLOB_RECURSE SOURCE_FILES
 
 include_directories(
     src/
+    ${OpenCV_INCLUDE_DIRS}
     ${OPENVR_INCLUDE_DIR}
 )
 
@@ -125,6 +132,6 @@ add_library(PMFBT SHARED
 )
 
 target_link_libraries(PMFBT
+    ${OpenCV_LIBS}
     ${OPENVR_LIBRARIES}
-    ${CMAKE_DL_LIBS}
 )

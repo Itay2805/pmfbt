@@ -69,3 +69,7 @@ struct vector3 {
 
     vector2 xy();
 };
+
+static inline vector3 middle(vector3 a, vector3 b) {
+    return vector3((a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2);
+}
