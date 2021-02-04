@@ -126,19 +126,19 @@ Pose3D::Pose3D(const std::array<vector2, 15>& coco_pose, const std::array<int, 1
      * First compute the constraint on the minimum size of s.
      */
     std::array<float, 14> smins = {
-        s_constraint(points[0] - collarpoint, SHOULDER / 2),
-        s_constraint(points[1] - collarpoint, SHOULDER / 2),
+        s_constraint(points[JT_HEAD] - collarpoint, SHOULDER / 2),
+        s_constraint(points[JT_COLLARBONE] - collarpoint, SHOULDER / 2),
         s_constraint(collarpoint - tailpoint, SPINE),
-        s_constraint(points[2] - tailpoint, PELVIC / 2.0),
-        s_constraint(points[3] - tailpoint, PELVIC / 2.0),
-        s_constraint(points[4] - points[0], UPPER_ARM),
-        s_constraint(points[5] - points[1], UPPER_ARM),
-        s_constraint(points[6] - points[2], THIGH),
-        s_constraint(points[7] - points[3], THIGH),
-        s_constraint(points[8] - points[4], FOREARM),
-        s_constraint(points[9] - points[5], FOREARM),
-        s_constraint(points[10] - points[6], FORELEG),
-        s_constraint(points[11] - points[7], FORELEG),
+        s_constraint(points[JT_TAILBONE] - tailpoint, PELVIC / 2.0),
+        s_constraint(points[JT_RIGHT_SHOULDER] - tailpoint, PELVIC / 2.0),
+        s_constraint(points[JT_LEFT_SHOULDER] - points[JT_HEAD], UPPER_ARM),
+        s_constraint(points[JT_RIGHT_HIP] - points[JT_COLLARBONE], UPPER_ARM),
+        s_constraint(points[JT_LEFT_HIP] - points[JT_TAILBONE], THIGH),
+        s_constraint(points[JT_RIGHT_ELBOW] - points[JT_RIGHT_SHOULDER], THIGH),
+        s_constraint(points[JT_LEFT_ELBOW] - points[JT_LEFT_SHOULDER], FOREARM),
+        s_constraint(points[JT_RIGHT_KNEE] - points[JT_RIGHT_HIP], FOREARM),
+        s_constraint(points[JT_LEFT_KNEE] - points[JT_LEFT_HIP], FORELEG),
+        s_constraint(points[JT_RIGHT_WRIST] - points[JT_RIGHT_ELBOW], FORELEG),
         0
     };
 
@@ -151,97 +151,97 @@ Pose3D::Pose3D(const std::array<vector2, 15>& coco_pose, const std::array<int, 1
      */
 
     // Set right shoulder at (0,0,0).
-    joints[3] = vector3::zero();
+    joints[JT_RIGHT_SHOULDER] = vector3::zero();
 
     // left shoulder
-    vector2 temp = joints[3].xy() + (points[1] - points[0]) / s;
-    joints[1] = vector3(
+    vector2 temp = joints[JT_RIGHT_SHOULDER].xy() + (points[JT_COLLARBONE] - points[JT_HEAD]) / s;
+    joints[JT_COLLARBONE] = vector3(
             temp.x, temp.y,
-            joints[3].z - relorder[0] * dz(points[1] - points[0], SHOULDER, s)
+            joints[JT_RIGHT_SHOULDER].z - relorder[0] * dz(points[JT_COLLARBONE] - points[JT_HEAD], SHOULDER, s)
     );
 
     // collarbone
-    joints[1] = (joints[3] + joints[4]) / 2.0;
+    joints[JT_COLLARBONE] = (joints[JT_RIGHT_SHOULDER] + joints[JT_LEFT_SHOULDER]) / 2.0;
 
     // tailbone
-    temp = joints[1].xy() + (tailpoint - collarpoint) / s;
-    joints[2] = vector3(
+    temp = joints[JT_COLLARBONE].xy() + (tailpoint - collarpoint) / s;
+    joints[JT_TAILBONE] = vector3(
         temp.x, temp.y,
-        joints[1].z - relorder[1] * dz(tailpoint - collarpoint, SPINE, s)
+        joints[JT_COLLARBONE].z - relorder[1] * dz(tailpoint - collarpoint, SPINE, s)
     );
 
     // right hip
-    temp = joints[2].xy() + (points[2] - tailpoint) / s;
-    joints[5] = vector3(
+    temp = joints[JT_TAILBONE].xy() + (points[JT_TAILBONE] - tailpoint) / s;
+    joints[JT_RIGHT_HIP] = vector3(
         temp.x, temp.y,
-        joints[2].z - relorder[2] * dz(points[2] - tailpoint, PELVIC / 2.0, s)
+        joints[JT_TAILBONE].z - relorder[2] * dz(points[JT_TAILBONE] - tailpoint, PELVIC / 2.0, s)
     );
 
     // left hip
-    temp = joints[2].xy() + (points[3] - tailpoint) / s;
-    joints[6] = vector3(
+    temp = joints[JT_TAILBONE].xy() + (points[JT_RIGHT_SHOULDER] - tailpoint) / s;
+    joints[JT_LEFT_HIP] = vector3(
         temp.x, temp.y,
-        joints[2].z - relorder[2] * dz(points[3] - tailpoint, PELVIC / 2.0, s)
+        joints[JT_TAILBONE].z - relorder[2] * dz(points[JT_RIGHT_SHOULDER] - tailpoint, PELVIC / 2.0, s)
     );
 
     // right elbow
-    temp = joints[3].xy() + (points[4] - points[0]) / s;
-    joints[7] = vector3(
+    temp = joints[JT_RIGHT_SHOULDER].xy() + (points[JT_LEFT_SHOULDER] - points[JT_HEAD]) / s;
+    joints[JT_RIGHT_ELBOW] = vector3(
         temp.x, temp.y,
-        joints[3].z - relorder[3] * dz(points[4] - points[0], UPPER_ARM, s)
+        joints[JT_RIGHT_SHOULDER].z - relorder[3] * dz(points[JT_LEFT_SHOULDER] - points[JT_HEAD], UPPER_ARM, s)
     );
 
     // left elbow
-    temp = joints[4].xy() + (points[5] - points[1]) / s;
-    joints[8] = vector3(
+    temp = joints[JT_LEFT_SHOULDER].xy() + (points[JT_RIGHT_HIP] - points[JT_COLLARBONE]) / s;
+    joints[JT_LEFT_ELBOW] = vector3(
         temp.x, temp.y,
-        joints[4].z - relorder[4] * dz(points[5] - points[1], UPPER_ARM, s)
+        joints[JT_LEFT_SHOULDER].z - relorder[4] * dz(points[JT_RIGHT_HIP] - points[JT_COLLARBONE], UPPER_ARM, s)
     );
 
     // right knee
-    temp = joints[5].xy() + (points[6] - points[2]) / s;
-    joints[9] = vector3(
+    temp = joints[JT_RIGHT_HIP].xy() + (points[JT_LEFT_HIP] - points[JT_TAILBONE]) / s;
+    joints[JT_RIGHT_KNEE] = vector3(
         temp.x, temp.y,
-        joints[5].z - relorder[5] * dz(points[6] - points[2], THIGH, s)
+        joints[JT_RIGHT_HIP].z - relorder[5] * dz(points[JT_LEFT_HIP] - points[JT_TAILBONE], THIGH, s)
     );
 
     // left knee
-    temp = joints[6].xy() + (points[7] - points[3]) / s;
-    joints[10] = vector3(
+    temp = joints[JT_LEFT_HIP].xy() + (points[JT_RIGHT_ELBOW] - points[JT_RIGHT_SHOULDER]) / s;
+    joints[JT_LEFT_KNEE] = vector3(
         temp.x, temp.y,
-        joints[6].z - relorder[6] * dz(points[7] - points[3], THIGH, s)
+        joints[JT_LEFT_HIP].z - relorder[6] * dz(points[JT_RIGHT_ELBOW] - points[JT_RIGHT_SHOULDER], THIGH, s)
     );
 
     // right wrist
-    temp = joints[7].xy() + (points[8] - points[4]) / s;
-    joints[11] = vector3(
+    temp = joints[JT_RIGHT_ELBOW].xy() + (points[JT_LEFT_ELBOW] - points[JT_LEFT_SHOULDER]) / s;
+    joints[JT_RIGHT_WRIST] = vector3(
         temp.x, temp.y,
-        joints[7].z - relorder[7] * dz(points[8] - points[4], FOREARM, s)
+        joints[JT_RIGHT_ELBOW].z - relorder[7] * dz(points[JT_LEFT_ELBOW] - points[JT_LEFT_SHOULDER], FOREARM, s)
     );
 
     // left wrist
-    temp = joints[8].xy() + (points[9] - points[5]) / s;
-    joints[12] = vector3(
+    temp = joints[JT_LEFT_ELBOW].xy() + (points[JT_RIGHT_KNEE] - points[JT_RIGHT_HIP]) / s;
+    joints[JT_LEFT_WRIST] = vector3(
         temp.x, temp.y,
-        joints[8].z - relorder[8] * dz(points[9] - points[5], FOREARM, s)
+        joints[JT_LEFT_ELBOW].z - relorder[8] * dz(points[JT_RIGHT_KNEE] - points[JT_RIGHT_HIP], FOREARM, s)
     );
 
     // right ankle
-    temp = joints[9].xy() + (points[10] - points[6]) / s;
-    joints[13] = vector3(
+    temp = joints[JT_RIGHT_KNEE].xy() + (points[JT_LEFT_KNEE] - points[JT_LEFT_HIP]) / s;
+    joints[JT_RIGHT_ANKLE] = vector3(
         temp.x, temp.y,
-        joints[9].z - relorder[9] * dz(points[10] - points[6], FORELEG, s)
+        joints[JT_RIGHT_KNEE].z - relorder[9] * dz(points[JT_LEFT_KNEE] - points[JT_LEFT_HIP], FORELEG, s)
     );
 
     // left ankle
-    temp = joints[10].xy() + (points[11] - points[7]) / s;
-    joints[14] = vector3(
+    temp = joints[JT_LEFT_KNEE].xy() + (points[JT_RIGHT_WRIST] - points[JT_RIGHT_ELBOW]) / s;
+    joints[JT_LEFT_ANKLE] = vector3(
         temp.x, temp.y,
-        joints[10].z - relorder[10] * dz(points[11] - points[7], FORELEG, s)
+        joints[JT_LEFT_KNEE].z - relorder[10] * dz(points[JT_RIGHT_WRIST] - points[JT_RIGHT_ELBOW], FORELEG, s)
     );
 
     // compute the head position
-    joints[0] = NECK / SPINE * (joints[1] - joints[2]) + joints[1];
+    joints[JT_HEAD] = NECK / SPINE * (joints[JT_COLLARBONE] - joints[JT_TAILBONE]) + joints[JT_COLLARBONE];
 }
 
 void Pose3D::SetHeadPosition(const vector3& head_pos) {
