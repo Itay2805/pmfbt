@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <fstream>
 #include <cmath>
+#include <hyperpose/hyperpose.hpp>
 
 #include "math/vector3.hpp"
 #include "math/vector2.hpp"
@@ -108,9 +109,8 @@ static float dz(const vector2& dpoint, float length, float scale) {
  *
  * this should give us all the 3d info we may need.
  */
-Pose3D::Pose3D(const std::array<vector2, 15>& coco_pose, const std::array<int, 11>& relorder) {
-    // use the point2pos to convert each of the front 2d points to a 3d
-    // point and use the side picture to know the depth order
+Pose3D::Pose3D(const std::array<vector2, hyperpose::COCO_N_PARTS>& coco_pose, const std::array<int, 11>& relorder) {
+    // convert the coco model into a model that the 3d reconstruction uses
     std::array<vector2, 15> points{};
     for (int i = 0; i < 15; i++) {
         const auto& part = coco_pose[OUR_TO_COCO[i]];

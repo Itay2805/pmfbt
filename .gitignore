@@ -1,4 +1,5 @@
 .idea
 out
 build
+3rdparty
 cmake-build-debug

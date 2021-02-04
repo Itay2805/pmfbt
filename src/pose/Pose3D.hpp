@@ -50,7 +50,7 @@ struct Pose3D {
      * Takes in the raw pose, which is 2d points + reldepth and turns
      * it into a 3d reconstruction of the pose
      */
-    Pose3D(const std::array<vector2, 15>& coco_pose, const std::array<int, 11>& relorder);
+    Pose3D(const std::array<vector2, hyperpose::COCO_N_PARTS>& coco_pose, const std::array<int, 11>& relorder);
 
     /**
      * Transform the pose given the hmd position

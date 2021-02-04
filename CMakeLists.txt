@@ -90,6 +90,17 @@ set(OpenCV_STATIC ON)
 find_package(OpenCV REQUIRED PATHS "deps/openvr")
 
 #
+# HyperPose
+#
+set(BUILD_CLI NO)
+set(BUILD_EXAMPLES NO)
+set(BUILD_USER_CODES NO)
+set(BUILD_TESTS NO)
+add_subdirectory("deps/hyperpose")
+set(HYPERPOSE_INCLUDE_DIRS deps/hyperpose/include)
+set(HYPERPOSE_LIBS hyperpose)
+
+#
 # OpenVR
 #
 find_library(OPENVR_LIBRARIES
@@ -123,6 +134,7 @@ file(GLOB_RECURSE SOURCE_FILES
 
 include_directories(
     src/
+    ${HYPERPOSE_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
     ${OPENVR_INCLUDE_DIR}
 )
@@ -132,6 +144,7 @@ add_library(PMFBT SHARED
 )
 
 target_link_libraries(PMFBT
+    ${HYPERPOSE_LIBS}
     ${OpenCV_LIBS}
     ${OPENVR_LIBRARIES}
 )
