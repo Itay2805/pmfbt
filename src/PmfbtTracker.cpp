@@ -1,4 +1,3 @@
-#include <openvr_capi.h>
 #include "PmfbtTracker.hpp"
 
 PmfbtTracker::PmfbtTracker()
